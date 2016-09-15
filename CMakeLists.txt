@@ -9,6 +9,9 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   roscpp
   std_msgs
+  std_srvs
+  message_generation
+  actionlib_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -51,25 +54,23 @@ find_package(catkin REQUIRED COMPONENTS
 #   Message2.msg
 # )
 
-## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+# Generate services in the 'srv' folder
+add_service_files(
+  FILES
+  custom_srv.srv
+)
 
-## Generate actions in the 'action' folder
-# add_action_files(
-#   FILES
-#   Action1.action
-#   Action2.action
-# )
+# Generate actions in the 'action' folder
+add_action_files(
+  FILES
+  custom_action.action
+)
 
-## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   geometry_msgs#   std_msgs
-# )
+# Generate added messages and services with any dependencies listed here
+generate_messages(
+  DEPENDENCIES
+  geometry_msgs std_msgs actionlib_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -103,7 +104,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES templates
-#  CATKIN_DEPENDS actionlib geometry_msgs roscpp std_msgs
+ CATKIN_DEPENDS actionlib geometry_msgs roscpp std_msgs std_srvs message_generation
 #  DEPENDS system_lib
 )
 
@@ -129,16 +130,20 @@ include_directories(
 # add_dependencies(templates ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-# add_executable(templates_node src/templates_node.cpp)
+add_executable(service_server src/service_server.cpp)
+add_executable(action_server src/action_server.cpp)
+add_executable(action_client src/action_client.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(templates_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(service_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
+add_dependencies(action_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
+add_dependencies(action_client ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(templates_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(service_server ${catkin_LIBRARIES} )
+target_link_libraries(action_server ${catkin_LIBRARIES} )
+target_link_libraries(action_client ${catkin_LIBRARIES} )
 
 #############
 ## Install ##

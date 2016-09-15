@@ -1,0 +1,13 @@
+#Anything here is the goal
+
+bool goal
+
+---
+
+#Anything here is feedback published to the client while the action is being carried out
+string feedback
+
+---
+
+#Anything here is the result once the action has been completed
+bool result
